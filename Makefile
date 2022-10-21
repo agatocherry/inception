@@ -22,13 +22,20 @@ all		:	build
 			@sudo echo "127.0.0.1 agcolas.42.fr" >> /etc/hosts
 			@sudo echo "127.0.0.1 www.agcolas.42.fr" >> /etc/hosts
 			@$(COMPOSE) up -d
-			@echo "${PURPLE}Build complete 🌸 ${NC}"
+			@echo "${PURPLE}🌸 Build complete ${NC}"
 
 build	:
 			@$(COMPOSE) build
 
 up:
 			@${COMPOSE} up -d 
+
+check:
+			@echo "${PURPLE}🌸 Docker services :${NC}"
+			@cd $(SRCS) && sudo docker-compose ps 
+			@echo ""
+			@echo "${PURPLE}🌸 Docker network :${NC}"
+			@cd $(SRCS) && sudo docker network ls
 
 down	:
 			@$(COMPOSE) down
@@ -42,8 +49,8 @@ fclean	:	clean
 			@$(DOCKER) network prune --force
 			@echo docker volume rm $(docker volume ls -q)
 			@$(DOCKER) image prune --force
-			@echo "${RED}$(NAME) is delete.${NC}"
+			@echo "${RED}⚠️ $(NAME) is delete.${NC}"
 
 re		:	fclean all
 
-.PHONY : all build up down clean fclean re
+.PHONY : all build up check down clean fclean re
