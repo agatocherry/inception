@@ -36,6 +36,9 @@ check:
 			@echo ""
 			@echo "${PURPLE}🌸 Docker network :${NC}"
 			@cd $(SRCS) && sudo docker network ls
+			@echo ""
+			@echo "${PURPLE}🌸 Docker volume :${NC}"
+			@cd $(SRCS) && sudo docker volume ls
 
 down	:
 			@$(COMPOSE) down
