@@ -1,18 +1,33 @@
-FROM alpine:3.12.0
+# Depuis l'image la plus legere
+FROM	alpine:3.14
 
-# Update System and Install Tools
-RUN apk update
-RUN apk add mariadb mariadb-common mariadb-client openrc
+# Mise a jour du gestionnaire de paquet, bonne pratique
+RUN		apk update
 
-# start openrc
-RUN openrc
-RUN touch /run/openrc/softlevel
+# Installation de mariadb et mariadb client
+RUN		apk add --no-cache --quiet --update mariadb mariadb-client vim
 
-# COPY Files to container
-COPY conf/wordpress.sql .
+# Creation du dossier pour le daemon
+RUN 	mkdir -p /var/lib/mysqld /run/mysqld
 
-# Copy installing script and make it executable
-ADD tools/run.sh .
-RUN chmod +x /run.sh
+# Execution du script de creation de la base de donnees
+COPY	./config/create_db.sql /tmp/create_db.sql
 
-ENTRYPOINT [ "./run.sh" ]
+# Copie du script entrypoint sur le container
+COPY	./scripts/entrypoint.sh ./
+
+COPY 	./config/mariadb-server.cnf /etc/my.cnf.d/
+
+RUN 	chmod +x ./entrypoint.sh
+
+# Installation de la base de donnee effective et authentification
+RUN		mariadb-install-db --datadir=/var/lib/mysql \
+			--auth-root-authentication-method=normal
+
+# Le user mysql doit etre le owner des dossiers relatifs a mysql
+RUN		chown -R mysql:mysql /var/lib/mysql 
+
+# Attribution des droits pour le daemon
+RUN 	chown -R mysql:mysql /run/mysqld
+
+ENTRYPOINT [ "sh", "entrypoint.sh" ]
