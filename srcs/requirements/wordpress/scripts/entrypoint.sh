@@ -12,18 +12,16 @@ fi
 if [ ! -f "wp-config.php" ]; then
 	cp /config/wp-config ./wp-config.php
 
-	sleep 5 
+	sleep 10 
 
 	wp core install --url="$WP_URL" --title="$WP_TITLE" --admin_user="$WP_ADMIN_USER" \
     	--admin_password="$WP_ADMIN_PWD" --admin_email="$WP_ADMIN_EMAIL" --skip-email
 
 	wp plugin update --all
 
-	wp theme install twentysixteen --activate
+	wp theme install blocksy --activate
 
 	wp user create $WP_USER $WP_USER_EMAIL --role=editor --user_pass=$WP_USER_PWD
-
-	wp post generate --count=5 --post_title="agcolas"
 fi
 
 php-fpm7 --nodaemonize
