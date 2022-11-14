@@ -1,7 +1,5 @@
 version: '3'
-# Le fichier docker-compose va permettre de definir les services, les volumes et les networks
 
-# docker volume ls
 volumes:
   mariadb-volume:
     driver: local
@@ -16,7 +14,6 @@ volumes:
       type: volume
       o: bind
 
-# docker network ls 
 networks:
   inception-network:
 
@@ -43,7 +40,6 @@ services:
       - mariadb-volume:/var/lib/mysql
     networks:
       - inception-network
-    #Variable interpolation
     environment:
       - MARIADB_ROOT_PWD=${MARIADB_ROOT_PWD}
       - MARIADB_DB=${MARIADB_DB}

@@ -1,9 +1,7 @@
 <?php
-# Fichier de configuration necessaire de wordpress avec le strict minimum
 
 define('WP_CACHE', true);
 
-/** Database **/
 define( 'DB_NAME', getenv('MARIADB_DB') );
 
 define( 'DB_USER', getenv('MARIADB_USER') );
